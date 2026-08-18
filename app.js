@@ -11,7 +11,7 @@ const CONFIG = {
     heroSubtext: "I help driven people get unstuck and move forward with clarity — no fluff, just a plan that works.",
 
     // CLIENT ACTION REQUIRED: replace with your real Calendly / Cal.com link
-    bookingLink: "PUT YOUR BOOKING LINK HERE",
+    bookingLink: "https://www.booking-link.com",
 
     // Shown in the "This Week" ledger on the hero. Keep it short — 4-6 rows reads best.
     availability: [
