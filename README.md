@@ -1,23 +1,27 @@
-# Coach & Consultant Booking Template — Setup Guide
+# Etsy / Product Seller Storefront — Setup Guide
 
 ## What You Got
-- A ready-to-launch website for coaches and consultants
+- A ready-to-launch storefront for handmade, print-on-demand, or digital product shops
 - Free hosting, no monthly fees, ever
 - No coding needed — everything is edited in one simple file
 
 ## Step 1: Add Your Info
-Open `app.js`. At the top, you'll see a `CONFIG` section — this is the only place you need to edit. Replace the placeholder text with your own:
-- Your name
-- Your headline and short intro
-- Your services and prices
-- Your testimonials
-- This week's availability (shown on your homepage)
+Open `app.js`. At the top, you'll see a `CONFIG` section — this is the only place you need to edit. Replace the placeholder text with your own. Here's exactly where each piece lives (line numbers may shift slightly if you add/remove lines above them):
 
-## Step 2: Connect Your Booking Link
-Still inside `CONFIG`, find `bookingLink` and replace the placeholder with your real Calendly, Cal.com, or booking page link. This is what makes your "Book a Session" buttons actually work.
+- **Line 8** — Your shop name
+- **Lines 10-11** — Your headline and short intro
+- **Line 14** — Your shop link (see Step 2 — don't click the placeholder link, it's not a real destination)
+- **Lines 17-24** — Your color/variant swatches
+- **Lines 26-30** — Your credentials
+- **Lines 32-36** — Your product categories
+- **Lines 38-54** — Your featured products
+- **Further down** — Your "about" section and reviews
 
-## Step 3: Add Your Photo
-Swap the "Your Photo" placeholder box for a real photo of yourself — this builds trust fast for new visitors.
+## Step 2: Connect Your Shop Link
+Still inside `CONFIG`, find `shopLink` (**line 14**) and replace the placeholder with your real Etsy shop URL or checkout link. **Do not click the placeholder link as-is** — it's not a real working page, just text meant to be replaced. This is what the "Visit the Shop" and "Browse the Shop" buttons point to.
+
+## Step 3: Add Your Photos
+Swap the "Shop Photo" and "Product Photo" placeholder boxes for real photos of your shop and products — this is what actually sells the piece.
 
 ## Step 4: Go Live (Free Hosting)
 1. Click "Use this template" on GitHub to copy this into your own account.
@@ -28,8 +32,4 @@ Swap the "Your Photo" placeholder box for a real photo of yourself — this buil
 Hosting is completely free to start. If you ever outgrow the free tier (very high traffic), a low-cost paid step may apply — but you'll never be locked into a recurring platform fee just to keep your site online.
 
 ## Questions?
-This is a self-guided template.
-
-👉 **Join the AE9 Labs Discord:** https://discord.gg/b45jmgHK3
-
-👉 **Support & Feedback form:** https://airtable.com/app2dNCzkf61VdNKa/pagH5JffQIe7npirH/form
+This is a self-guided template. For setup help, reach out through your support link.
