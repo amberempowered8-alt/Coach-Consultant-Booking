@@ -35,7 +35,7 @@ Already have your own domain from Squarespace Domains, Namecheap, GoDaddy, or Cl
 **1. Set it in GitHub:**
 1. In your repository, go to **Settings → Pages**.
 2. Scroll to **Custom domain**, enter your domain (e.g., `www.yourdomain.com`), and click **Save**.
-3. Check the box for **Enforce HTTPS** — this turns on your free SSL security certificate.
+3. Check the box for **Enforce HTTPS** — this turns on your free SSL security certificate. (Sometimes it takes a couple minutes to update, so if it doesn't allow you to click it, know it is updating)
 
 **2. Update your domain's DNS settings:**
 Log into your domain provider's DNS management panel and add:
