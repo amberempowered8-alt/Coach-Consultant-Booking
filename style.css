@@ -232,6 +232,7 @@ h1 { font-size: clamp(2.1rem, 4vw, 3rem); line-height: 1.15; margin-bottom: 1.25
 /* --- Footer --- */
 .site-footer { border-top: 1px solid var(--line); padding: 2rem 0; }
 .footer-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--ink-soft); }
+.footer-muted { color: var(--ink-soft); }
 
 /* --- Scroll reveal --- */
 .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
