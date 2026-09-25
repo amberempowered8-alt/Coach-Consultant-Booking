@@ -13,6 +13,11 @@ const CONFIG = {
     // CLIENT ACTION REQUIRED: replace with your real Calendly / Cal.com link
     bookingLink: "https://www.booking-link.com",
 
+    // Optional: paste a photo URL here (or, if you uploaded a photo file into
+    // this repo, just put its file name, e.g. "photo.jpg"). Leave this as ""
+    // to keep the placeholder box shown in the About section.
+    photoUrl: "",
+
     // Shown in the "This Week" ledger on the hero. Keep it short — 4-6 rows reads best.
     availability: [
         { day: "Mon", time: "10:00 AM", status: "Open" },
@@ -92,6 +97,17 @@ function renderText() {
     if (bookingLink) bookingLink.href = CONFIG.bookingLink;
 }
 
+function renderPhoto() {
+    const container = document.getElementById('about-photo');
+    if (!container) return;
+
+    if (CONFIG.photoUrl && CONFIG.photoUrl.trim() !== '') {
+        container.innerHTML = `<img src="${escapeHTML(CONFIG.photoUrl)}" alt="${escapeHTML(CONFIG.coachName)}">`;
+        container.classList.add('has-photo');
+    }
+    // If photoUrl is blank, the placeholder box (in index.html) stays as-is.
+}
+
 function renderLedger() {
     const strip = document.getElementById('ledger-strip');
     if (!strip) return;
@@ -159,6 +175,7 @@ function initScrollReveal() {
 
 function init() {
     renderText();
+    renderPhoto();
     renderLedger();
     renderTrust();
     renderAboutFacts();
