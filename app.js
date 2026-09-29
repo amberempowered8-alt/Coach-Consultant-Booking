@@ -2,6 +2,10 @@
 // COACH & CONSULTANT BOOKING TEMPLATE — CONFIG
 // Edit everything in the CONFIG object below. You don't need to touch
 // index.html or style.css to customize the content.
+//
+// Your SERVICES and TESTIMONIALS are kept up to date automatically from
+// Airtable — see SETUP-GUIDE.md for the one-time setup. You never paste
+// any secret token into this file.
 // =========================================================================
 
 const CONFIG = {
@@ -41,32 +45,9 @@ const CONFIG = {
         "No long-term contracts required"
     ],
 
-    services: [
-        {
-            name: "Discovery Call",
-            price: "Free — 20 min",
-            desc: "A short call to see if we're a good fit, and to talk through where you're stuck.",
-            featured: false
-        },
-        {
-            name: "1:1 Session",
-            price: "$150 / session",
-            desc: "A focused, single session to work through a specific challenge and leave with a clear next step.",
-            featured: true
-        },
-        {
-            name: "4-Session Package",
-            price: "$525 total",
-            desc: "Ongoing support across a month — best for working through something bigger than one call can solve.",
-            featured: false
-        }
-    ],
-
-    testimonials: [
-        { quote: "I came in stuck and left with an actual plan I could use that week.", name: "— Client Name" },
-        { quote: "Direct, honest, and genuinely helpful. Worth every session.", name: "— Client Name" },
-        { quote: "Best decision I made this year for my business.", name: "— Client Name" }
-    ]
+    // Services and Testimonials are no longer edited here — they're synced
+    // automatically from your Airtable base into data/services.json and
+    // data/testimonials.json. See SETUP-GUIDE.md.
 };
 
 // =========================================================================
@@ -134,26 +115,92 @@ function renderAboutFacts() {
     list.innerHTML = CONFIG.aboutFacts.map(f => `<li>${escapeHTML(f)}</li>`).join('');
 }
 
-function renderServices() {
+/**
+ * Loads your Services grid from data/services.json — a plain data file that
+ * a scheduled GitHub Action keeps in sync with the "Services" table in your
+ * Airtable base. This file never contains your Airtable token; it only
+ * contains the published records themselves. See SETUP-GUIDE.md.
+ */
+async function renderServices() {
     const grid = document.getElementById('service-grid');
     if (!grid) return;
-    grid.innerHTML = CONFIG.services.map(s => `
-        <div class="service-card ${s.featured ? 'is-featured' : ''} reveal">
-            <p class="service-name">${escapeHTML(s.name)}</p>
-            <p class="service-price mono">${escapeHTML(s.price)}</p>
-            <p class="service-desc">${escapeHTML(s.desc)}</p>
-            <a href="#booking" class="btn btn-brass btn-small">Book This</a>
-        </div>`).join('');
+
+    try {
+        const response = await fetch('data/services.json', { cache: 'no-store' });
+
+        if (!response.ok) {
+            grid.innerHTML = `<p class="loading">Your services will appear here once the automatic sync runs for the first time.</p>`;
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!data.records || data.records.length === 0) {
+            grid.innerHTML = `<p class="loading">No published services yet. Set a row's Status to "Published" in your Services table to display it here.</p>`;
+            return;
+        }
+
+        grid.innerHTML = data.records.map(record => {
+            const fields = record.fields || {};
+            const name = escapeHTML(fields['Service Name'] || 'Untitled Service');
+            const price = escapeHTML(fields['Price'] || '');
+            const desc = escapeHTML(fields['Description'] || '');
+            const featured = !!fields['Featured'];
+
+            return `
+                <div class="service-card ${featured ? 'is-featured' : ''} reveal">
+                    <p class="service-name">${name}</p>
+                    <p class="service-price mono">${price}</p>
+                    <p class="service-desc">${desc}</p>
+                    <a href="#booking" class="btn btn-brass btn-small">Book This</a>
+                </div>`;
+        }).join('');
+
+    } catch (error) {
+        console.error('Services load error:', error);
+        grid.innerHTML = `<p class="loading">Couldn't load services right now. Check the Actions tab in your GitHub repo for errors.</p>`;
+    }
 }
 
-function renderTestimonials() {
+/**
+ * Loads your Testimonials grid from data/testimonials.json — synced from
+ * the "Testimonials" table in your Airtable base the same way Services is.
+ */
+async function renderTestimonials() {
     const grid = document.getElementById('testimonial-grid');
     if (!grid) return;
-    grid.innerHTML = CONFIG.testimonials.map(t => `
-        <div class="testimonial-card reveal">
-            <p class="testimonial-quote">"${escapeHTML(t.quote)}"</p>
-            <p class="testimonial-name">${escapeHTML(t.name)}</p>
-        </div>`).join('');
+
+    try {
+        const response = await fetch('data/testimonials.json', { cache: 'no-store' });
+
+        if (!response.ok) {
+            grid.innerHTML = `<p class="loading">Your testimonials will appear here once the automatic sync runs for the first time.</p>`;
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!data.records || data.records.length === 0) {
+            grid.innerHTML = `<p class="loading">No published testimonials yet. Set a row's Status to "Published" in your Testimonials table to display it here.</p>`;
+            return;
+        }
+
+        grid.innerHTML = data.records.map(record => {
+            const fields = record.fields || {};
+            const quote = escapeHTML(fields['Quote'] || '');
+            const name = escapeHTML(fields['Client Name'] || 'A happy client');
+
+            return `
+                <div class="testimonial-card reveal">
+                    <p class="testimonial-quote">"${quote}"</p>
+                    <p class="testimonial-name">— ${name}</p>
+                </div>`;
+        }).join('');
+
+    } catch (error) {
+        console.error('Testimonials load error:', error);
+        grid.innerHTML = `<p class="loading">Couldn't load testimonials right now. Check the Actions tab in your GitHub repo for errors.</p>`;
+    }
 }
 
 function initScrollReveal() {
@@ -173,14 +220,16 @@ function initScrollReveal() {
     items.forEach(el => observer.observe(el));
 }
 
-function init() {
+async function init() {
     renderText();
     renderPhoto();
     renderLedger();
     renderTrust();
     renderAboutFacts();
-    renderServices();
-    renderTestimonials();
+    // Wait for the Airtable-synced content so the .reveal scroll-in effect
+    // (set up right after) also applies to the service and testimonial
+    // cards, not just the static sections.
+    await Promise.all([renderServices(), renderTestimonials()]);
     initScrollReveal();
 }
 
